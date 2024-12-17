@@ -1,0 +1,36 @@
+import os
+import markdown
+from docx import Document
+from pathlib import Path
+
+def convert_md_to_docx(input_folder, output_folder):
+    # Ensure the output folder exists
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
+
+    # Loop through all files in the input folder
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".md") or filename.endswith(".txt"):
+            filepath = os.path.join(input_folder, filename)
+            with open(filepath, "r", encoding="utf-8") as file:
+                text = file.read()
+
+            # Convert markdown text to HTML
+            html = markdown.markdown(text)
+
+            # Create a new Word Document
+            doc = Document()
+
+            # Add the HTML content to the document
+            doc.add_paragraph(html)
+
+            # Save the document
+            output_filename = os.path.splitext(filename)[0] + ".docx"
+            output_filepath = os.path.join(output_folder, output_filename)
+            doc.save(output_filepath)
+
+    print("Conversion completed. Files saved to:", output_folder)
+
+# Example usage
+input_folder = "C:/Users/johan666/Downloads/zimmwriter_v10.503/zimmwriter/output"
+output_folder = "C:/Users/johan666/Downloads/docx zimmwriter"
+convert_md_to_docx(input_folder, output_folder)
